@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Pidan - Initial .gitiginore file for your project
+# Pidan - Initialize gitiginore file for your project 
 # Should work on sh, dash, bash, ksh, zsh
 #
 # Copyright (C) 2023-present, Implemented by Bin Hua <code@tourcoder.com>
