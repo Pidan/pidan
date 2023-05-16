@@ -11,7 +11,7 @@ Initialize gitiginore file for your project
 curl https://raw.githubusercontent.com/Pidan/pidan/master/pidan | bash
 ```
 
-![](screenshots_screenshots_install_info_upgrade.png)
+![](screenshots/screenshots_install_info_upgrade.png)
 
 ### How to use
 
@@ -23,7 +23,7 @@ Commands:
   info      Show all information about Pidan
 ```
 
-![](screenshots_screenshots_init.png)
+![](screenshots/screenshots_init.png)
 
 ### How to Collaborate
 
