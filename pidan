@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Pidan - Initialize gitignore file for your project 
+# Pidan - Initialize a personalized gitignore file for your project
 # Should work on sh, dash, bash, ksh, zsh
 #
 # Copyright (C) 2023-present, Implemented by Bin Hua <code@tourcoder.com>
