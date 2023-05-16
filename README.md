@@ -1,5 +1,5 @@
 # Pidan
-Initialize gitiginore file for your project
+Initialize gitignore file for your project
 
 ### Intro
 
