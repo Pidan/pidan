@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Pidan - Initial .gitiginore file for your project
+# Should work on sh, dash, bash, ksh, zsh
+#
+# Copyright (C) 2023-present, Implemented by Bin Hua <code@tourcoder.com>
+
+# local version
+function local_version() {
+    echo "v0.1.0"
+}
+
+# remote version on GitHub
+function remote_version() {
+    curl -s "https://api.github.com/repos/Pidan/pidan/releases" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk 'NR==1'
+}
+
+# info command
+function show_info() {
+    echo ""
+    echo "Pidan ($(local_version))"
+    echo ""
+    echo "Usage: pidan <command>"
+    echo "Commands:"
+    echo "  init      Initialize gitignore file"
+    echo "  upgrade   Check for script upgrade and install the latest version"
+    echo "  info      Show all information about Pidan"
+}
+
+# check upgrade
+function check_upgrade() {
+    echo "Checking for Pidan upgrade..."
+    # check if the script is up to date
+    if [ "$remote_version" == "$local_version" ]; then
+        echo "Pidan is already up to date."
+    else
+        echo "Pidan Local version: $(local_version)"
+        echo "Pidan Latest version: $(remote_version)"
+        read -p "Do you want to upgrade? (y/N): " answer
+        if [[ "${answer}" == "Y" ]] || [[ "${answer}" == "y" ]] || [[ "${answer}" == "" ]]; then
+            echo "Updating..."
+            sudo curl -sL https://raw.githubusercontent.com/Pidan/pidan/master/pidan -o /usr/local/bin/pidan
+            sudo chmod +x /usr/local/bin/pidan
+            echo -e "Pidan is already up to date." && exit 0
+        else
+            echo -e "Pidan upgrade cancelled" && exit 1
+        fi
+    fi
+}
+
+# Handling command parameters
+case "$1" in
+    "init") init_gitignore ;;
+    "upgrade") check_upgrade ;;
+    "info") show_info ;;
+    *) show_info ;;
+esac
