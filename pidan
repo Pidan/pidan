@@ -186,6 +186,8 @@ function init_gitignore() {
             echo ""
             red "Invalid option. Please try again."
         else
+            cat gitignore.pidan >> .gitignore
+            rm gitignore.pidan
             echo ""
             green "Initialization successful."
         fi
