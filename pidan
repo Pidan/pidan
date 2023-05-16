@@ -5,6 +5,23 @@
 #
 # Copyright (C) 2023-present, Implemented by Bin Hua <code@tourcoder.com>
 
+# color
+green(){
+    echo -e "\033[32m\033[01m$1\033[0m"
+}
+
+red(){
+    echo -e "\033[31m\033[01m$1\033[0m"
+}
+
+yellow(){
+    echo -e "\033[33m\033[01m$1\033[0m"
+}
+
+white(){
+    echo -e "\033[37m\033[01m$1\033[0m"
+}
+
 # local version
 function local_version() {
     echo "v0.1.1"
@@ -15,18 +32,38 @@ function remote_version() {
     curl -s "https://api.github.com/repos/Pidan/pidan/releases" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk 'NR==1'
 }
 
-#script install
+# get os
+function init_os {
+    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/os | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
+}
+
+# get language
+function init_language {
+    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/language | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
+}
+
+# get framework
+function init_framework {
+    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/framework | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
+}
+
+# get IDE
+function init_ide {
+    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/ide | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
+}
+
+# script install
 function script_install() {
     sudo curl -sL https://raw.githubusercontent.com/Pidan/pidan/master/pidan -o /usr/local/bin/pidan
     if [ $? -ne 0 ]; then
-        echo "Pidan install failed, please try again."
+        red "Pidan install failed, please try again."
         exit 1
     fi
     sudo chmod +x /usr/local/bin/pidan
     if [ $? -ne 0 ]; then
-        echo "Pidan install failed, please try again."
+        red "Pidan install failed, please try again."
         exit 1
-    fis
+    fi
 }
 
 # info command
@@ -48,7 +85,7 @@ function check_upgrade() {
     echo "latest version: $(remote_version)"
     # check if the script is up to date
     if [ $(remote_version) == $(local_version) ]; then
-        echo "Pidan is already up to date."
+        green "Pidan is already up to date."
     else
         echo "Pidan Local version: $(local_version)"
         echo "Pidan Latest version: $(remote_version)"
@@ -56,11 +93,93 @@ function check_upgrade() {
         if [[ "${answer}" == "Y" ]] || [[ "${answer}" == "y" ]] || [[ "${answer}" == "" ]]; then
             echo "Updating..."
             script_install
-            echo -e "Pidan is already up to date." && exit 0
+            green "Pidan is already up to date." && exit 0
         else
-            echo -e "Pidan upgrade cancelled" && exit 1
+            red "Pidan upgrade cancelled" && exit 1
         fi
     fi
+}
+
+# initialize gitignore file
+function init_gitignore() {
+    # check if the .gitignore file exists
+    # if [ -f ".gitignore" ]; then
+    #     echo ".gitignore file already exists."
+    #     exit 1
+    # else
+        echo "Initializing .gitignore file"
+        echo "============================="
+        # Step 1, Choose your OS
+        os_list=($(init_os))
+        PS3="Enter the number corresponding to your choice: "
+        select os in "${os_list[@]}"; do
+        if [[ -n $os ]]; then
+            echo "OS：$os"
+            break
+        else
+            red "Invalid option. Please try again."
+        fi
+        done
+
+        # Step 2, Choose your language
+        echo "------------------------"
+        lang_list=($(init_language))
+        PS3="Enter the number corresponding to your choice: "
+        select lang in "${lang_list[@]}"; do
+        if [[ -n $lang ]]; then
+            echo "Lang: $lang"
+            break
+        else
+            red "Invalid option. Please try again."
+        fi
+        done
+
+        # Step 3, Choose your framework
+        echo "------------------------"
+        framework_list=($(init_framework))
+        PS3="Enter the number corresponding to your choice: "
+        select framework in "${framework_list[@]}"; do
+        if [[ -n $framework ]]; then
+            echo "Framework: $framework"
+            break
+        else
+            red "Invalid option. Please try again."
+        fi
+        done
+
+        # Step 4, Choose your IDE
+        echo "------------------------"
+        ide_list=($(init_ide))
+        PS3="Enter the number corresponding to your choice: "
+        select ide in "${ide_list[@]}"; do
+        if [[ -n $ide ]]; then
+            echo "IDE: $ide"
+            break
+        else
+            red "Invalid option. Please try again."
+        fi
+        done
+
+        # Step 5, Comfirm
+        echo "------------------------"
+        echo "Summary of your selections:"
+        echo "Operating System: $os"
+        echo "Programming Language: $lang"
+        echo "Framework: $framework"
+        echo "IDE: $ide"
+        read -p "Confirm initialization? (Y/n) " confirm
+
+        if [ "$confirm" == "n" ]; then
+            rm gitignore.pidan
+            echo ""
+            red "Invalid option. Please try again."
+        else
+            echo ""
+            green "Initialization successful."
+        fi
+        echo "============================="
+
+    # fi
 }
 
 main(){
@@ -74,7 +193,7 @@ main(){
     esac
   else
     script_install
-    echo "Pidan installed, just run 'pidan info'" && exit 1
+    green "Pidan installed, just run 'pidan info'" && exit 1
   fi
 }
 
