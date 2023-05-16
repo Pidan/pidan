@@ -1,8 +1,6 @@
 # Pidan
 Initial .gitiginore file for your project
 
-Golang Latest Version
-
 ### Intro
 
 `pidan` is a simple bash script to initialize gitignore file for your project.
