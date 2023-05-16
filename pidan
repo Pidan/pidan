@@ -7,7 +7,7 @@
 
 # local version
 function local_version() {
-    echo "v0.1.0"
+    echo "v0.1.1"
 }
 
 # remote version on GitHub
@@ -30,8 +30,10 @@ function show_info() {
 # check upgrade
 function check_upgrade() {
     echo "Checking for Pidan upgrade..."
+    echo "local version: $(local_version)"
+    echo "latest version: $(remote_version)"
     # check if the script is up to date
-    if [ "$remote_version" == "$local_version" ]; then
+    if [ $(remote_version) == $(local_version) ]; then
         echo "Pidan is already up to date."
     else
         echo "Pidan Local version: $(local_version)"
