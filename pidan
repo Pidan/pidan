@@ -15,6 +15,20 @@ function remote_version() {
     curl -s "https://api.github.com/repos/Pidan/pidan/releases" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk 'NR==1'
 }
 
+#script install
+function script_install() {
+    sudo curl -sL https://raw.githubusercontent.com/Pidan/pidan/master/pidan -o /usr/local/bin/pidan
+    if [ $? -ne 0 ]; then
+        echo "Pidan install failed, please try again."
+        exit 1
+    fi
+    sudo chmod +x /usr/local/bin/pidan
+    if [ $? -ne 0 ]; then
+        echo "Pidan install failed, please try again."
+        exit 1
+    fis
+}
+
 # info command
 function show_info() {
     echo ""
@@ -41,8 +55,7 @@ function check_upgrade() {
         read -p "Do you want to upgrade? (y/N): " answer
         if [[ "${answer}" == "Y" ]] || [[ "${answer}" == "y" ]] || [[ "${answer}" == "" ]]; then
             echo "Updating..."
-            sudo curl -sL https://raw.githubusercontent.com/Pidan/pidan/master/pidan -o /usr/local/bin/pidan
-            sudo chmod +x /usr/local/bin/pidan
+            script_install
             echo -e "Pidan is already up to date." && exit 0
         else
             echo -e "Pidan upgrade cancelled" && exit 1
@@ -50,10 +63,19 @@ function check_upgrade() {
     fi
 }
 
-# Handling command parameters
-case "$1" in
-    "init") init_gitignore ;;
-    "upgrade") check_upgrade ;;
-    "info") show_info ;;
-    *) show_info ;;
-esac
+main(){
+  if  [[ $(command -v pidan) ]]; then
+    # Handling command parameters
+    case "$1" in
+        "init") init_gitignore ;;
+        "upgrade") check_upgrade ;;
+        "info") show_info ;;
+        *) show_info ;;
+    esac
+  else
+    script_install
+    echo "Pidan installed, just run 'pidan info'" && exit 1
+  fi
+}
+
+main $1

@@ -23,7 +23,7 @@ Commands:
 
 ### How to Collaborate
 
-Please feel free to submit your PR or issue.
+Please feel free to submit your PRs and issues.
 
 ### Copyright
 
