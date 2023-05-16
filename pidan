@@ -120,10 +120,15 @@ function init_gitignore() {
         # Step 1, Choose your OS
         os_list=($(init_os))
         PS3="Enter the number corresponding to your choice: "
-        select os in "${os_list[@]}"; do
+        os_options=("${os_list[@]}" "skip") 
+        select os in "${os_options[@]}"; do
         if [[ -n $os ]]; then
-            get_gitignore "os" "$os"
-            green "OS gitignore file appended."
+            if [[ "$os" == "skip" ]]; then
+                yellow "Skipped"
+            else
+                get_gitignore "os" "$os"
+                green "OS gitignore file appended."
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -134,10 +139,15 @@ function init_gitignore() {
         echo "------------------------"
         lang_list=($(init_language))
         PS3="Enter the number corresponding to your choice: "
-        select lang in "${lang_list[@]}"; do
+        lang_options=("${lang_list[@]}" "skip")
+        select lang in "${lang_options[@]}"; do
         if [[ -n $lang ]]; then
-            get_gitignore "language" "$lang"
-            green "Language gitignore file appended."
+            if [[ "$lang" == "skip" ]]; then
+                yellow "Skipped"
+            else
+                get_gitignore "language" "$lang"
+                green "Language gitignore file appended."
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -148,10 +158,15 @@ function init_gitignore() {
         echo "------------------------"
         framework_list=($(init_framework))
         PS3="Enter the number corresponding to your choice: "
-        select framework in "${framework_list[@]}"; do
+        framework_options=("${framework_list[@]}" "skip")
+        select framework in "${framework_options[@]}"; do
         if [[ -n $framework ]]; then
-            get_gitignore "framework" "$framework"
-            green "Framework gitignore file appended."
+            if [[ "$framework" == "skip" ]]; then
+                yellow "Skipped"
+            else
+                get_gitignore "framework" "$framework"
+                green "Framework gitignore file appended."
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -162,10 +177,15 @@ function init_gitignore() {
         echo "------------------------"
         ide_list=($(init_ide))
         PS3="Enter the number corresponding to your choice: "
-        select ide in "${ide_list[@]}"; do
+        ide_options=("${ide_list[@]}" "skip")
+        select ide in "${ide_options[@]}"; do
         if [[ -n $ide ]]; then
-            get_gitignore "ide" "$ide"
-            green "IDE gitignore file appended."
+            if [[ "$ide" == "skip" ]]; then
+                yellow "Skipped"
+            else
+                get_gitignore "ide" "$ide"
+                green "IDE gitignore file appended."
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -174,17 +194,17 @@ function init_gitignore() {
 
         # Step 5, Comfirm
         echo "------------------------"
-        echo "Summary of your selections:"
-        echo "Operating System: $os"
-        echo "Programming Language: $lang"
-        echo "Framework: $framework"
-        echo "IDE: $ide"
+        echo "Summary:"
+        echo "Operating System: $(if [[ "$os" == "skip" ]]; then yellow "$os"; else green "$os"; fi)"
+        echo "Programming Language: $(if [[ "$lang" == "skip" ]]; then yellow "$lang"; else green "$lang"; fi)"
+        echo "Framework: $(if [[ "$framework" == "skip" ]]; then yellow "$framework"; else green "$framework"; fi)"
+        echo "IDE: $(if [[ "$ide" == "skip" ]]; then yellow "$ide"; else green "$ide"; fi)"
         read -p "Confirm initialization? (Y/n) " confirm
 
         if [ "$confirm" == "n" ]; then
             rm gitignore.pidan
             echo ""
-            red "Invalid option. Please try again."
+            red "Initialization cancelled."
         else
             cat gitignore.pidan >> .gitignore
             rm gitignore.pidan
