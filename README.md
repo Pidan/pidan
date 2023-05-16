@@ -1,5 +1,5 @@
 # Pidan
-Initialize gitignore file for your project
+Initialize a personalized gitignore file for your project
 
 ### Intro
 
