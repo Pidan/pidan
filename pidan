@@ -25,9 +25,23 @@ white(){
     echo -e "\033[37m\033[01m$1\033[0m"
 }
 
+blue(){
+    echo -e "\033[34m\033[01m$1\033[0m"
+}
+
+# cleanup and exit
+cleanup_and_exit() {
+    if [[ -f "gitignore.pidan" ]]; then
+        rm "gitignore.pidan"
+    fi
+    exit 0
+}
+
+trap 'cleanup_and_exit' INT SIGTERM SIGHUP
+
 # local version
 function local_version() {
-    echo "v0.1.1"
+    echo "v0.1.2"
 }
 
 # remote version on GitHub
@@ -111,19 +125,25 @@ function check_upgrade() {
 # initialize gitignore file
 function init_gitignore() {
     # check if the .gitignore file exists
-    # if [ -f ".gitignore" ]; then
-    #     echo ".gitignore file already exists."
-    #     exit 1
-    # else
-        echo "Initializing .gitignore file"
-        echo "============================="
+    if [ -f ".gitignore" ]; then
+        red "gitignore file already exists. You need to delete it first. Run 'rm .gitignore'"
+        exit 1
+    else
+        echo "Initializing gitignore file"
         # Step 1, Choose your OS
+        echo ""
+        blue "Choose your OS:"
         os_list=($(init_os))
         PS3="Enter the number corresponding to your choice: "
-        select os in "${os_list[@]}"; do
+        os_options=("${os_list[@]}" "skip") 
+        select os in "${os_options[@]}"; do
         if [[ -n $os ]]; then
-            get_gitignore "os" "$os"
-            green "OS gitignore file appended."
+            if [[ "$os" == "skip" ]]; then
+                yellow "...Skipped"
+            else
+                get_gitignore "os" "$os"
+                green "...Done"
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -131,13 +151,19 @@ function init_gitignore() {
         done
 
         # Step 2, Choose your language
-        echo "------------------------"
+        echo ""
+        blue "Choose your language:"
         lang_list=($(init_language))
         PS3="Enter the number corresponding to your choice: "
-        select lang in "${lang_list[@]}"; do
+        lang_options=("${lang_list[@]}" "skip")
+        select lang in "${lang_options[@]}"; do
         if [[ -n $lang ]]; then
-            get_gitignore "language" "$lang"
-            green "Language gitignore file appended."
+            if [[ "$lang" == "skip" ]]; then
+                yellow "...Skipped"
+            else
+                get_gitignore "language" "$lang"
+                green "...Done"
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -145,13 +171,19 @@ function init_gitignore() {
         done
 
         # Step 3, Choose your framework
-        echo "------------------------"
+        echo ""
+        blue "Choose your framework:"
         framework_list=($(init_framework))
         PS3="Enter the number corresponding to your choice: "
-        select framework in "${framework_list[@]}"; do
+        framework_options=("${framework_list[@]}" "skip")
+        select framework in "${framework_options[@]}"; do
         if [[ -n $framework ]]; then
-            get_gitignore "framework" "$framework"
-            green "Framework gitignore file appended."
+            if [[ "$framework" == "skip" ]]; then
+                yellow "...Skipped"
+            else
+                get_gitignore "framework" "$framework"
+                green "...Done"
+            fi
             break
         else
             red "Invalid option. Please try again."
@@ -159,41 +191,47 @@ function init_gitignore() {
         done
 
         # Step 4, Choose your IDE
-        echo "------------------------"
+        echo ""
+        blue "Choose your IDE:"
         ide_list=($(init_ide))
         PS3="Enter the number corresponding to your choice: "
-        select ide in "${ide_list[@]}"; do
+        ide_options=("${ide_list[@]}" "skip")
+        select ide in "${ide_options[@]}"; do
         if [[ -n $ide ]]; then
-            get_gitignore "ide" "$ide"
-            green "IDE gitignore file appended."
+            if [[ "$ide" == "skip" ]]; then
+                yellow "...Skipped"
+            else
+                get_gitignore "ide" "$ide"
+                green "...Done"
+            fi
             break
         else
             red "Invalid option. Please try again."
         fi
         done
 
-        # Step 5, Comfirm
-        echo "------------------------"
-        echo "Summary of your selections:"
-        echo "Operating System: $os"
-        echo "Programming Language: $lang"
-        echo "Framework: $framework"
-        echo "IDE: $ide"
+        # Step 5, Comfirm initialization
+        echo ""
+        blue "Summary:"
+        echo "Operating System: $(if [[ "$os" == "skip" ]]; then yellow "$os"; else green "$os"; fi)"
+        echo "Programming Language: $(if [[ "$lang" == "skip" ]]; then yellow "$lang"; else green "$lang"; fi)"
+        echo "Framework: $(if [[ "$framework" == "skip" ]]; then yellow "$framework"; else green "$framework"; fi)"
+        echo "IDE: $(if [[ "$ide" == "skip" ]]; then yellow "$ide"; else green "$ide"; fi)"
+        echo ""
         read -p "Confirm initialization? (Y/n) " confirm
 
         if [ "$confirm" == "n" ]; then
             rm gitignore.pidan
             echo ""
-            red "Invalid option. Please try again."
+            red "Initialization cancelled."
         else
             cat gitignore.pidan >> .gitignore
             rm gitignore.pidan
             echo ""
             green "Initialization successful."
         fi
-        echo "============================="
 
-    # fi
+    fi
 }
 
 main(){
