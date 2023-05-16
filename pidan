@@ -5,6 +5,9 @@
 #
 # Copyright (C) 2023-present, Implemented by Bin Hua <code@tourcoder.com>
 
+# define some links
+gitignore_hub_url="https://raw.githubusercontent.com/Pidan/gitignore/main/"
+
 # color
 green(){
     echo -e "\033[32m\033[01m$1\033[0m"
@@ -50,6 +53,11 @@ function init_framework {
 # get IDE
 function init_ide {
     curl -sL https://api.github.com/repos/Pidan/gitignore/contents/ide | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
+}
+
+# get gitignore file
+function get_gitignore {
+    curl -sL "${gitignore_hub_url}${1}/${2}.gitignore" >> gitignore.pidan
 }
 
 # script install
@@ -114,7 +122,8 @@ function init_gitignore() {
         PS3="Enter the number corresponding to your choice: "
         select os in "${os_list[@]}"; do
         if [[ -n $os ]]; then
-            echo "OS：$os"
+            get_gitignore "os" "$os"
+            green "OS gitignore file appended."
             break
         else
             red "Invalid option. Please try again."
@@ -127,7 +136,8 @@ function init_gitignore() {
         PS3="Enter the number corresponding to your choice: "
         select lang in "${lang_list[@]}"; do
         if [[ -n $lang ]]; then
-            echo "Lang: $lang"
+            get_gitignore "language" "$lang"
+            green "Language gitignore file appended."
             break
         else
             red "Invalid option. Please try again."
@@ -140,7 +150,8 @@ function init_gitignore() {
         PS3="Enter the number corresponding to your choice: "
         select framework in "${framework_list[@]}"; do
         if [[ -n $framework ]]; then
-            echo "Framework: $framework"
+            get_gitignore "framework" "$framework"
+            green "Framework gitignore file appended."
             break
         else
             red "Invalid option. Please try again."
@@ -153,7 +164,8 @@ function init_gitignore() {
         PS3="Enter the number corresponding to your choice: "
         select ide in "${ide_list[@]}"; do
         if [[ -n $ide ]]; then
-            echo "IDE: $ide"
+            get_gitignore "ide" "$ide"
+            green "IDE gitignore file appended."
             break
         else
             red "Invalid option. Please try again."
