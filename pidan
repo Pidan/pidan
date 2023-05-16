@@ -131,6 +131,7 @@ function init_gitignore() {
     else
         echo "Initializing gitignore file"
         # Step 1, Choose your OS
+        echo ""
         blue "Choose your OS:"
         os_list=($(init_os))
         PS3="Enter the number corresponding to your choice: "
@@ -150,6 +151,7 @@ function init_gitignore() {
         done
 
         # Step 2, Choose your language
+        echo ""
         blue "Choose your language:"
         lang_list=($(init_language))
         PS3="Enter the number corresponding to your choice: "
@@ -169,6 +171,7 @@ function init_gitignore() {
         done
 
         # Step 3, Choose your framework
+        echo ""
         blue "Choose your framework:"
         framework_list=($(init_framework))
         PS3="Enter the number corresponding to your choice: "
@@ -188,6 +191,7 @@ function init_gitignore() {
         done
 
         # Step 4, Choose your IDE
+        echo ""
         blue "Choose your IDE:"
         ide_list=($(init_ide))
         PS3="Enter the number corresponding to your choice: "
@@ -206,13 +210,14 @@ function init_gitignore() {
         fi
         done
 
-        # Step 5, Comfirm
-        echo "-------------------------------"
+        # Step 5, Comfirm initialization
+        echo ""
         blue "Summary:"
         echo "Operating System: $(if [[ "$os" == "skip" ]]; then yellow "$os"; else green "$os"; fi)"
         echo "Programming Language: $(if [[ "$lang" == "skip" ]]; then yellow "$lang"; else green "$lang"; fi)"
         echo "Framework: $(if [[ "$framework" == "skip" ]]; then yellow "$framework"; else green "$framework"; fi)"
         echo "IDE: $(if [[ "$ide" == "skip" ]]; then yellow "$ide"; else green "$ide"; fi)"
+        echo ""
         read -p "Confirm initialization? (Y/n) " confirm
 
         if [ "$confirm" == "n" ]; then
@@ -225,7 +230,6 @@ function init_gitignore() {
             echo ""
             green "Initialization successful."
         fi
-        echo "============================="
 
     fi
 }
