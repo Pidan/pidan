@@ -1,5 +1,5 @@
 # Pidan
-Initial .gitiginore file for your project
+Initialize gitiginore file for your project
 
 ### Intro
 
@@ -11,6 +11,8 @@ Initial .gitiginore file for your project
 curl https://raw.githubusercontent.com/Pidan/pidan/master/pidan | bash
 ```
 
+![](screenshots_screenshots_install_info_upgrade.png)
+
 ### How to use
 
 ```
@@ -20,6 +22,8 @@ Commands:
   upgrade   Check for script upgrade and install the latest version
   info      Show all information about Pidan
 ```
+
+![](screenshots_screenshots_init.png)
 
 ### How to Collaborate
 

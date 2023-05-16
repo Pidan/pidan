@@ -115,7 +115,7 @@ function init_gitignore() {
     #     echo ".gitignore file already exists."
     #     exit 1
     # else
-        echo "Initializing .gitignore file"
+        echo "Initializing gitignore file"
         echo "============================="
         # Step 1, Choose your OS
         os_list=($(init_os))
