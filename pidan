@@ -8,9 +8,19 @@
 # Define version (default to latest if not provided)
 VERSION="v0.1.3"
 
+# Detect OS
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    OS="linux"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    OS="darwin"
+else
+    echo "Unsupported operating system"
+    exit 1
+fi
+
 # Define download URLs
-URL1="https://pidan.hua.info/$VERSION/pidan"
-URL2="https://res.binhua.org/pidan/$VERSION/pidan"
+URL1="https://pidan.hua.info/$VERSION/pidan-$OS"
+URL2="https://res.binhua.org/pidan/$VERSION/pidan-$OS"
 
 # Color functions
 color_echo() {
@@ -44,7 +54,7 @@ download_file() {
 install_pidan() {
     local tmp_file="/tmp/pidan"
     
-    color_echo "blue" "Downloading Pidan version $VERSION..."
+    color_echo "blue" "Downloading Pidan version $VERSION for $OS..."
     if download_file "$URL1" "$tmp_file"; then
         color_echo "green" "Download successful."
     elif download_file "$URL2" "$tmp_file"; then
@@ -58,7 +68,7 @@ install_pidan() {
 
     # Install to /usr/local/bin
     if mv "$tmp_file" /usr/local/bin/pidan && chmod +x /usr/local/bin/pidan; then
-        color_echo "green" "Pidan $VERSION has been successfully installed. You can now use 'pidan' command."
+        color_echo "green" "Pidan $VERSION for $OS has been successfully installed. You can now use 'pidan' command."
     else
         color_echo "red" "Installation failed. Please try again or install manually."
         exit 1
