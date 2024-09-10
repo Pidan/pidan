@@ -1,12 +1,13 @@
 #!/bin/bash
 #
-# Pidan - Initialize a personalized gitignore file for your project
+# Pidan - A Git helper
 # Should work on sh, dash, bash, ksh, zsh
 #
-# Copyright (C) 2023-present, Implemented by Bin Hua <code@tourcoder.com>
+# Copyright (C) 2023-present, Implemented by Bin Hua <https://binhua.org/pidan>
 
-# define some links
-gitignore_hub_url="https://raw.githubusercontent.com/Pidan/gitignore/main/"
+# Define download URLs
+URL1="https://res.binhua.org/dl/pidan/pidan"
+URL2="https://pidan.hua.info/pidan"
 
 # color
 green(){
@@ -29,224 +30,41 @@ blue(){
     echo -e "\033[34m\033[01m$1\033[0m"
 }
 
-# cleanup and exit
-cleanup_and_exit() {
-    if [[ -f "gitignore.pidan" ]]; then
-        rm "gitignore.pidan"
-    fi
-    exit 0
-}
+# root
+if [ "$(id -u)" -ne 0 ]; then
+  red "Please run this script as the root user."
+  exit 1
+fi
 
-trap 'cleanup_and_exit' INT SIGTERM SIGHUP
+# Download and save to a temporary folder.
+TMP_FILE="/tmp/pidan"
 
-# local version
-function local_version() {
-    echo "v0.1.2"
-}
-
-# remote version on GitHub
-function remote_version() {
-    curl -s "https://api.github.com/repos/Pidan/pidan/releases" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | awk 'NR==1'
-}
-
-# get os
-function init_os {
-    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/os | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
-}
-
-# get language
-function init_language {
-    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/language | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
-}
-
-# get framework
-function init_framework {
-    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/framework | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
-}
-
-# get IDE
-function init_ide {
-    curl -sL https://api.github.com/repos/Pidan/gitignore/contents/ide | grep -o '"name": "[^"]*' | awk -F': "' '{print $2}' | sed -e 's/.gitignore//'
-}
-
-# get gitignore file
-function get_gitignore {
-    curl -sL "${gitignore_hub_url}${1}/${2}.gitignore" >> gitignore.pidan
-}
-
-# script install
-function script_install() {
-    sudo curl -sL https://raw.githubusercontent.com/Pidan/pidan/master/pidan -o /usr/local/bin/pidan
-    if [ $? -ne 0 ]; then
-        red "Pidan install failed, please try again."
-        exit 1
-    fi
-    sudo chmod +x /usr/local/bin/pidan
-    if [ $? -ne 0 ]; then
-        red "Pidan install failed, please try again."
-        exit 1
-    fi
-}
-
-# info command
-function show_info() {
-    echo ""
-    echo "Pidan ($(local_version))"
-    echo ""
-    echo "Usage: pidan <command>"
-    echo "Commands:"
-    echo "  init      Initialize gitignore file"
-    echo "  upgrade   Check for script upgrade and install the latest version"
-    echo "  info      Show all information about Pidan"
-}
-
-# check upgrade
-function check_upgrade() {
-    echo "Checking for Pidan upgrade..."
-    echo "local version: $(local_version)"
-    echo "latest version: $(remote_version)"
-    # check if the script is up to date
-    if [ $(remote_version) == $(local_version) ]; then
-        green "Pidan is already up to date."
-    else
-        echo "Pidan Local version: $(local_version)"
-        echo "Pidan Latest version: $(remote_version)"
-        read -p "Do you want to upgrade? (y/N): " answer
-        if [[ "${answer}" == "Y" ]] || [[ "${answer}" == "y" ]] || [[ "${answer}" == "" ]]; then
-            echo "Updating..."
-            script_install
-            green "Pidan is already up to date." && exit 0
-        else
-            red "Pidan upgrade cancelled" && exit 1
-        fi
-    fi
-}
-
-# initialize gitignore file
-function init_gitignore() {
-    # check if the .gitignore file exists
-    if [ -f ".gitignore" ]; then
-        red "gitignore file already exists. You need to delete it first. Run 'rm .gitignore'"
-        exit 1
-    else
-        echo "Initializing gitignore file"
-        # Step 1, Choose your OS
-        echo ""
-        blue "Choose your OS:"
-        os_list=($(init_os))
-        PS3="Enter the number corresponding to your choice: "
-        os_options=("${os_list[@]}" "skip") 
-        select os in "${os_options[@]}"; do
-        if [[ -n $os ]]; then
-            if [[ "$os" == "skip" ]]; then
-                yellow "...Skipped"
-            else
-                get_gitignore "os" "$os"
-                green "...Done"
-            fi
-            break
-        else
-            red "Invalid option. Please try again."
-        fi
-        done
-
-        # Step 2, Choose your language
-        echo ""
-        blue "Choose your language:"
-        lang_list=($(init_language))
-        PS3="Enter the number corresponding to your choice: "
-        lang_options=("${lang_list[@]}" "skip")
-        select lang in "${lang_options[@]}"; do
-        if [[ -n $lang ]]; then
-            if [[ "$lang" == "skip" ]]; then
-                yellow "...Skipped"
-            else
-                get_gitignore "language" "$lang"
-                green "...Done"
-            fi
-            break
-        else
-            red "Invalid option. Please try again."
-        fi
-        done
-
-        # Step 3, Choose your framework
-        echo ""
-        blue "Choose your framework:"
-        framework_list=($(init_framework))
-        PS3="Enter the number corresponding to your choice: "
-        framework_options=("${framework_list[@]}" "skip")
-        select framework in "${framework_options[@]}"; do
-        if [[ -n $framework ]]; then
-            if [[ "$framework" == "skip" ]]; then
-                yellow "...Skipped"
-            else
-                get_gitignore "framework" "$framework"
-                green "...Done"
-            fi
-            break
-        else
-            red "Invalid option. Please try again."
-        fi
-        done
-
-        # Step 4, Choose your IDE
-        echo ""
-        blue "Choose your IDE:"
-        ide_list=($(init_ide))
-        PS3="Enter the number corresponding to your choice: "
-        ide_options=("${ide_list[@]}" "skip")
-        select ide in "${ide_options[@]}"; do
-        if [[ -n $ide ]]; then
-            if [[ "$ide" == "skip" ]]; then
-                yellow "...Skipped"
-            else
-                get_gitignore "ide" "$ide"
-                green "...Done"
-            fi
-            break
-        else
-            red "Invalid option. Please try again."
-        fi
-        done
-
-        # Step 5, Comfirm initialization
-        echo ""
-        blue "Summary:"
-        echo "Operating System: $(if [[ "$os" == "skip" ]]; then yellow "$os"; else green "$os"; fi)"
-        echo "Programming Language: $(if [[ "$lang" == "skip" ]]; then yellow "$lang"; else green "$lang"; fi)"
-        echo "Framework: $(if [[ "$framework" == "skip" ]]; then yellow "$framework"; else green "$framework"; fi)"
-        echo "IDE: $(if [[ "$ide" == "skip" ]]; then yellow "$ide"; else green "$ide"; fi)"
-        echo ""
-        read -p "Confirm initialization? (Y/n) " confirm
-
-        if [ "$confirm" == "n" ]; then
-            rm gitignore.pidan
-            echo ""
-            red "Initialization cancelled."
-        else
-            cat gitignore.pidan >> .gitignore
-            rm gitignore.pidan
-            echo ""
-            green "Initialization successful."
-        fi
-
-    fi
-}
-
-main(){
-  if  [[ $(command -v pidan) ]]; then
-    # Handling command parameters
-    case "$1" in
-        "init") init_gitignore ;;
-        "upgrade") check_upgrade ;;
-        "info") show_info ;;
-        *) show_info ;;
-    esac
+# Download via URL 1
+blue "Downloading..."
+if curl -o "$TMP_FILE" -fL "$URL1"; then
+  green "Done"
+else
+  # If failed, download via URL 2
+  red "Downloaded failed，try again..."
+  if curl -o "$TMP_FILE" -fL "$URL2"; then
+    green "Done"
   else
-    script_install
-    green "Pidan installed, just run 'pidan info'" && exit 1
+    red "Failed, please manually download the file from the link below and place it in /usr/local/bin.  "$URL1" or "$URL2"."
+    exit 1
   fi
-}
+fi
 
-main $1
+# install to /usr/local/bin
+green "Successfully"
+mv "$TMP_FILE" /usr/local/bin/pidan
+
+# Set execution permissions
+chmod +x /usr/local/bin/pidan
+
+# If successed
+if [ -f /usr/local/bin/pidan ]; then
+  green "Done，you can use 'pidan' now"
+else
+  red "Failed, you can try again"
+  exit 1
+fi
