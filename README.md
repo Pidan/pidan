@@ -11,6 +11,12 @@ Pidan is a Git helper that simplifies various Git tasks, making them more user-f
 curl https://raw.githubusercontent.com/Pidan/pidan/master/pidan | bash
 ```
 
+**Alternative**
+
+```
+curl https://pidan.hua.info/pidan | bash
+```
+
 ## Usage
 
 ```
