@@ -1,9 +1,9 @@
 # Pidan
-A lightweight bash script to initialize a personalized gitignore file for your project.
+A Git helper
 
 ## Intro
 
-Pidan is a lightweight bash script designed to simplify the process of initializing a personalized gitignore file for your project. With Pidan, you can easily generate a customized gitignore file tailored to your specific needs. Whether you're working on a macOS, Windows, or Linux system, Pidan provides a user-friendly interface for selecting the desired operating system, programming language, framework, and IDE options. By automating the gitignore file setup, Pidan helps ensure that your project repository only includes the relevant files and directories while excluding unnecessary files. Experience hassle-free gitignore file initialization with Pidan.
+Pidan is a Git helper that simplifies various Git tasks, making them more user-friendly. For example, it assists in tasks like initializing a `.gitignore` file and more.
 
 ## Installation
 
@@ -11,23 +11,37 @@ Pidan is a lightweight bash script designed to simplify the process of initializ
 curl https://raw.githubusercontent.com/Pidan/pidan/master/pidan | bash
 ```
 
-![](screenshots/screenshots_install_info_upgrade.png)
-
 ## Usage
 
 ```
-Usage: pidan <command>...
-Commands:
-  init      Initialize gitignore file
-  upgrade   Check for script upgrade and install the latest version
-  info      Show all information about Pidan
-```
+USAGE: pidan [global options] command [command options] [arguments...]
 
-![](screenshots/screenshots_init.png)
+COMMANDS:
+   init  Initialize Pidan, need to run first
+
+   export  Export Git repository contents
+
+   gitignore  Initialize or update .gitignore file
+    Options:
+    -o  Overwrite existing .gitignore (default: true)
+    -a  Append to existing .gitignore (default: false)
+    
+    Subcommands:
+    config  Configure custom .gitignore file
+        Usage: pidan gitignore config [-o | -a] [remote_gitignore]
+        Options:
+        -o  Overwrite existing content (default: false)
+        -a  Append to existing content (default: true)
+
+GLOBAL OPTIONS:
+   --upgrade   Check for script upgrade and install the latest version (default: false)
+   --info      Show all information about Pidan (default: false)
+   --help, -h  show help
+```
 
 ## Contribution
 
-If you have any questions or feature suggestions, please feel free to submit your PRs and [issues](https://github.com/Pidan/pidan/issues).
+If you have any questions or feature suggestions, please feel free to submit them in [issues](https://github.com/Pidan/pidan/issues).
 
 ## License
 
