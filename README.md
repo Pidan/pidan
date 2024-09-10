@@ -8,13 +8,13 @@ Pidan is a Git helper that simplifies various Git tasks, making them more user-f
 ## Installation
 
 ```
-curl https://raw.githubusercontent.com/Pidan/pidan/master/pidan | bash
+curl https://pidan.hua.info/pidan | bash
 ```
 
 **Alternative**
 
 ```
-curl https://pidan.hua.info/pidan | bash
+curl https://raw.githubusercontent.com/Pidan/pidan/master/pidan | bash
 ```
 
 ## Usage
