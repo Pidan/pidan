@@ -53,21 +53,28 @@ download_file() {
 # Install function
 install_pidan() {
     local tmp_file="/tmp/pidan"
-    
+    local install_dir="/usr/local/bin"
+
+    # Check and create /usr/local/bin if it doesn't exist
+    if [ ! -d "$install_dir" ]; then
+        color_echo "blue" "Creating directory $install_dir..."
+        mkdir -p "$install_dir"
+    fi
+
     color_echo "blue" "Downloading Pidan version $VERSION for $OS..."
     if download_file "$URL1" "$tmp_file"; then
         color_echo "green" "Download successful."
     elif download_file "$URL2" "$tmp_file"; then
         color_echo "green" "Download successful (from backup URL)."
     else
-        color_echo "red" "Download failed. Please manually download the file from one of these links and place it in /usr/local/bin:"
+        color_echo "red" "Download failed. Please manually download the file from one of these links and place it in $install_dir:"
         echo "$URL1"
         echo "$URL2"
         exit 1
     fi
 
     # Install to /usr/local/bin
-    if mv "$tmp_file" /usr/local/bin/pidan && chmod +x /usr/local/bin/pidan; then
+    if mv "$tmp_file" "$install_dir/pidan" && chmod +x "$install_dir/pidan"; then
         color_echo "green" "Pidan $VERSION for $OS has been successfully installed. You can now use 'pidan' command."
     else
         color_echo "red" "Installation failed. Please try again or install manually."
