@@ -6,7 +6,7 @@
 # Copyright (C) 2023-present, Implemented by Bin Hua <https://binhua.org/pidan>
 
 # Define version (default to latest if not provided)
-VERSION="v0.1.3"
+VERSION="v0.1.4"
 
 # Detect OS
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -19,7 +19,7 @@ else
 fi
 
 # Define download URLs
-URL1="https://pidan.hua.info/$VERSION/pidan-$OS"
+URL1="https://dlc.binhua.org/pidan/$VERSION/pidan-$OS"
 URL2="https://res.binhua.org/pidan/$VERSION/pidan-$OS"
 
 # Color functions
