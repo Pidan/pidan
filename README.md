@@ -3,8 +3,7 @@
 This repository is no longer actively maintained.  
 The project has been upgraded and moved to a new solution.
 
-👉 **Please visit the new repository for the latest updates and ongoing development:**  
-**[https://binhua.org/pidan](https://binhua.org/pidan)**  
+👉 **Please visit the new repository for the latest updates and ongoing development:**  **[https://binhua.org/pidan](https://binhua.org/pidan)**  
 
 Thank you for your support!
 
